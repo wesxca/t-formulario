@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Reporte</title>
+</head>
+<body>
+    <h1>Formulario de Reporte</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Numero Económico:</label>
+        <select id="numero_economico" name="numero_economico" onchange="updateSeries()" required>
+            <option value="">Selecciona...</option>
+            {% for key in dropdown_data.keys() %}
+                <option value="{{ key }}">{{ key }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label>Numero de Serie:</label>
+        <select id="numero_serie" name="numero_serie" required>
+            <option value="">Selecciona un Número Económico primero</option>
+        </select>
+        <br><br>
+
+        <label>Reporte:</label>
+        <input type="text" name="reporte" required>
+        <br><br>
+
+        <label>Evidencia (foto):</label>
+        <input type="file" name="evidencia" accept="image/*">
+        <br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        // eslint-disable-next-line
+        const dropdownData = {{ dropdown_data | tojson }};
+        function updateSeries() {
+            const numeroEconomico = document.getElementById("numero_economico").value;
+            const numeroSerieDropdown = document.getElementById("numero_serie");
+            numeroSerieDropdown.innerHTML = "";
+
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Selecciona un Número de Serie";
+            numeroSerieDropdown.appendChild(defaultOption);
+
+            if (dropdownData[numeroEconomico]) {
+                dropdownData[numeroEconomico].forEach(function(serie){
+                    const option = document.createElement("option");
+                    option.value = serie;
+                    option.text = serie;
+                    numeroSerieDropdown.appendChild(option);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
